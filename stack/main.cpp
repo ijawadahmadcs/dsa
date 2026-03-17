@@ -1,46 +1,68 @@
 #include "linkedlist.h"
+#include <vector>
+
+// Deep-copy a singly linked stack (head only, next only)
+LinkedList* copyLinkedList(LinkedList* src) {
+    LinkedList* newList = new LinkedList();
+    Node* temp = src->head;
+    Node* tail = NULL;
+    while (temp != NULL) {
+        Node* newNode = new Node(temp->data);
+        if (newList->head == NULL) {
+            newList->head = newNode;
+            tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+        temp = temp->next;
+    }
+    return newList;
+}
 
 int main() {
 
-    LinkedList stack1, stack2;
+    vector<LinkedList*> stacks;
+    stacks.push_back(new LinkedList());   // Stack 1
+    stacks.push_back(new LinkedList());   // Stack 2
     int choice, value, position, stackChoice;
 
     do {
-        cout << "1. Insert at Top"<< endl;
-        cout << "2. Insert at End"<< endl;
-        cout << "3. Insert at Position"<<endl;
-        cout << "4. Delete from Top"<<endl;
-        cout << "5. Delete from End "<<endl;
-        cout << "6. Delete at Position"<<endl;
-        cout << "7. Search "<<endl;
-        cout << "8. Reverse "<<endl;
-        cout << "9. Count Elements"<<endl;
-        cout << "10. Display Stack"<<endl;
-        cout << "11. Find Largest"<<endl;
-        cout << "12. Find Smallest"<<endl;
-        cout << "13. Get Sum"<<endl;
-        cout << "14. Get Average"<<endl;
-        cout << "15. Split Stack"<<endl;
-        cout << "16. Concatenate"<<endl;
-        cout << "17. Find Third Largest"<<endl;
-        cout << "18. Check if Stack is Empty"<<endl;
-        cout << "19. View Top Element"<<endl;
-        cout << "20. Display"<<endl;
-        cout << "0. Exit"<<endl;
-        cout << "Enter choice"<<endl;
+        cout << "\n=== STACK MENU (Active Stacks: " << stacks.size() << ") ===" << endl;
+        cout << "1.  Insert at Top" << endl;
+        cout << "2.  Insert at End" << endl;
+        cout << "3.  Insert at Position" << endl;
+        cout << "4.  Delete from Top" << endl;
+        cout << "5.  Delete from End" << endl;
+        cout << "6.  Delete at Position" << endl;
+        cout << "7.  Search" << endl;
+        cout << "8.  Reverse           (creates new stack)" << endl;
+        cout << "9.  Count Elements" << endl;
+        cout << "10. Display Stack" << endl;
+        cout << "11. Find Largest" << endl;
+        cout << "12. Find Smallest" << endl;
+        cout << "13. Get Sum" << endl;
+        cout << "14. Get Average" << endl;
+        cout << "15. Split Stack       (second part becomes new stack)" << endl;
+        cout << "16. Concatenate       (result stored as new stack)" << endl;
+        cout << "17. Find Third Largest" << endl;
+        cout << "18. Check if Stack is Empty" << endl;
+        cout << "19. View Top Element" << endl;
+        cout << "20. Display All Stacks" << endl;
+        cout << "0.  Exit" << endl;
+        cout << "Enter choice: ";
         cin >> choice;
 
-        if (choice >= 1 && choice <= 14 || choice == 17 || choice == 18 || choice == 19) {
-            cout << "Select Stack (1 or 2): ";
-            cin >> stackChoice;
-        }
-
         LinkedList* selectedStack = nullptr;
-
-        if (stackChoice == 1)
-            selectedStack = &stack1;
-        else if (stackChoice == 2)
-            selectedStack = &stack2;
+        if ((choice >= 1 && choice <= 14) || choice == 17 || choice == 18 || choice == 19) {
+            cout << "Select Stack (1 to " << stacks.size() << "): ";
+            cin >> stackChoice;
+            if (stackChoice < 1 || stackChoice > (int)stacks.size()) {
+                cout << "Invalid stack selection!\n";
+                continue;
+            }
+            selectedStack = stacks[stackChoice - 1];
+        }
 
         switch (choice) {
 
@@ -79,9 +101,13 @@ int main() {
                 cout << "Not Found!\n";
             break;
 
-        case 8:
-            selectedStack->reverse();
+        case 8: {
+            LinkedList* reversed = copyLinkedList(selectedStack);
+            reversed->reverse();
+            stacks.push_back(reversed);
+            cout << "Reversed copy stored as Stack " << stacks.size() << ".\n";
             break;
+        }
 
         case 9:
             cout << "Total Elements: " << selectedStack->countNodes() << endl;
@@ -108,39 +134,42 @@ int main() {
             break;
 
         case 15: {
-            int targetStack;
-            cout << "Split which stack? (1 or 2): ";
+            cout << "Select Stack to split (1 to " << stacks.size() << "): ";
             cin >> stackChoice;
-            cout << "Enter position to split: ";
+            if (stackChoice < 1 || stackChoice > (int)stacks.size()) {
+                cout << "Invalid stack selection!\n";
+                break;
+            }
+            cout << "Enter position to split at: ";
             cin >> position;
-            cout << "Store second part in which stack? (1 or 2): ";
-            cin >> targetStack;
-
-            if (stackChoice == 1 && targetStack == 2)
-                stack1.split(position, stack2);
-            else if (stackChoice == 2 && targetStack == 1)
-                stack2.split(position, stack1);
-            else
-                cout << "Invalid selection!\n";
-
+            LinkedList* secondPart = new LinkedList();
+            stacks[stackChoice - 1]->split(position, *secondPart);
+            stacks.push_back(secondPart);
+            cout << "Second part stored as Stack " << stacks.size() << ".\n";
             break;
         }
 
         case 16: {
             int first, second;
-            cout << "Concatenate:\n";
-            cout << "Enter first stack (1 or 2): ";
+            cout << "Select first stack  (1 to " << stacks.size() << "): ";
             cin >> first;
-            cout << "Enter second stack (1 or 2): ";
+            cout << "Select second stack (1 to " << stacks.size() << "): ";
             cin >> second;
-
-            if (first == 1 && second == 2)
-                stack1.concatenate(stack2);
-            else if (first == 2 && second == 1)
-                stack2.concatenate(stack1);
-            else
-                cout << "Invalid selection!\n";
-
+            if (first < 1 || first > (int)stacks.size() ||
+                second < 1 || second > (int)stacks.size()) {
+                cout << "Invalid stack selection!\n";
+                break;
+            }
+            if (first == second) {
+                cout << "Cannot concatenate a stack with itself!\n";
+                break;
+            }
+            LinkedList* result = copyLinkedList(stacks[first - 1]);
+            LinkedList* copySecond = copyLinkedList(stacks[second - 1]);
+            result->concatenate(*copySecond);
+            delete copySecond;
+            stacks.push_back(result);
+            cout << "Concatenated result stored as Stack " << stacks.size() << ".\n";
             break;
         }
 
@@ -160,10 +189,11 @@ int main() {
             break;
 
         case 20:
-            cout << "Stack1: ";
-            stack1.display();
-            cout << "Stack2: ";
-            stack2.display();
+            cout << "\n=== All Stacks (" << stacks.size() << " total) ===" << endl;
+            for (int i = 0; i < (int)stacks.size(); i++) {
+                cout << "Stack " << (i + 1) << " -> ";
+                stacks[i]->display();
+            }
             break;
 
         case 0:
@@ -175,6 +205,9 @@ int main() {
         }
 
     } while (choice != 0);
+
+    for (LinkedList* st : stacks)
+        delete st;
 
     return 0;
 }

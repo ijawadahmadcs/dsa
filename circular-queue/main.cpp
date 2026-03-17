@@ -1,46 +1,72 @@
 #include "linkedlist.h"
+#include <vector>
+
+// Deep-copy a circular queue (front/rear, last->next == front)
+LinkedList* copyLinkedList(LinkedList* src) {
+    LinkedList* newList = new LinkedList();
+    if (src->front == NULL) return newList;
+    Node* temp = src->front;
+    Node* firstNew = NULL;
+    Node* prevNew = NULL;
+    do {
+        Node* newNode = new Node(temp->data);
+        if (firstNew == NULL) {
+            firstNew = newNode;
+            newList->front = newNode;
+        } else {
+            prevNew->next = newNode;
+        }
+        prevNew = newNode;
+        temp = temp->next;
+    } while (temp != src->front);
+    prevNew->next = firstNew;   // close the circle
+    newList->rear = prevNew;
+    return newList;
+}
 
 int main() {
 
-    LinkedList queue1, queue2;
+    vector<LinkedList*> queues;
+    queues.push_back(new LinkedList());   // Queue 1
+    queues.push_back(new LinkedList());   // Queue 2
     int choice, value, position, queueChoice;
 
     do {
-        cout << "1. Enqueue (Insert at Rear)" << endl;
-        cout << "2. Insert at Front" << endl;
-        cout << "3. Insert at Position" << endl;
-        cout << "4. Dequeue (Delete from Front)" << endl;
-        cout << "5. Delete from Rear" << endl;
-        cout << "6. Delete at Position" << endl;
-        cout << "7. Search" << endl;
-        cout << "8. Reverse" << endl;
-        cout << "9. Count Elements" << endl;
+        cout << "\n=== CIRCULAR QUEUE MENU (Active Queues: " << queues.size() << ") ===" << endl;
+        cout << "1.  Enqueue (Insert at Rear)" << endl;
+        cout << "2.  Insert at Front" << endl;
+        cout << "3.  Insert at Position" << endl;
+        cout << "4.  Dequeue (Delete from Front)" << endl;
+        cout << "5.  Delete from Rear" << endl;
+        cout << "6.  Delete at Position" << endl;
+        cout << "7.  Search" << endl;
+        cout << "8.  Reverse           (creates new queue)" << endl;
+        cout << "9.  Count Elements" << endl;
         cout << "10. Display Queue" << endl;
         cout << "11. Find Largest" << endl;
         cout << "12. Find Smallest" << endl;
         cout << "13. Get Sum" << endl;
         cout << "14. Get Average" << endl;
-        cout << "15. Split Queue" << endl;
-        cout << "16. Concatenate" << endl;
+        cout << "15. Split Queue       (second part becomes new queue)" << endl;
+        cout << "16. Concatenate       (result stored as new queue)" << endl;
         cout << "17. Find Third Largest" << endl;
         cout << "18. Check if Queue is Empty" << endl;
         cout << "19. View Front Element" << endl;
-        cout << "20. Display Both Queues" << endl;
-        cout << "0. Exit" << endl;
-        cout << "Enter choice" << endl;
+        cout << "20. Display All Queues" << endl;
+        cout << "0.  Exit" << endl;
+        cout << "Enter choice: ";
         cin >> choice;
 
-        if (choice >= 1 && choice <= 14 || choice == 17 || choice == 18 || choice == 19) {
-            cout << "Select Queue (1 or 2): ";
-            cin >> queueChoice;
-        }
-
         LinkedList* selectedQueue = nullptr;
-
-        if (queueChoice == 1)
-            selectedQueue = &queue1;
-        else if (queueChoice == 2)
-            selectedQueue = &queue2;
+        if ((choice >= 1 && choice <= 14) || choice == 17 || choice == 18 || choice == 19) {
+            cout << "Select Queue (1 to " << queues.size() << "): ";
+            cin >> queueChoice;
+            if (queueChoice < 1 || queueChoice > (int)queues.size()) {
+                cout << "Invalid queue selection!\n";
+                continue;
+            }
+            selectedQueue = queues[queueChoice - 1];
+        }
 
         switch (choice) {
 
@@ -79,9 +105,13 @@ int main() {
                 cout << "Not Found!\n";
             break;
 
-        case 8:
-            selectedQueue->reverse();
+        case 8: {
+            LinkedList* reversed = copyLinkedList(selectedQueue);
+            reversed->reverse();
+            queues.push_back(reversed);
+            cout << "Reversed copy stored as Queue " << queues.size() << ".\n";
             break;
+        }
 
         case 9:
             cout << "Total Elements: " << selectedQueue->countNodes() << endl;
@@ -108,39 +138,42 @@ int main() {
             break;
 
         case 15: {
-            int targetQueue;
-            cout << "Split which queue? (1 or 2): ";
+            cout << "Select Queue to split (1 to " << queues.size() << "): ";
             cin >> queueChoice;
-            cout << "Enter position to split: ";
+            if (queueChoice < 1 || queueChoice > (int)queues.size()) {
+                cout << "Invalid queue selection!\n";
+                break;
+            }
+            cout << "Enter position to split at: ";
             cin >> position;
-            cout << "Store second part in which queue? (1 or 2): ";
-            cin >> targetQueue;
-
-            if (queueChoice == 1 && targetQueue == 2)
-                queue1.split(position, queue2);
-            else if (queueChoice == 2 && targetQueue == 1)
-                queue2.split(position, queue1);
-            else
-                cout << "Invalid selection!\n";
-
+            LinkedList* secondPart = new LinkedList();
+            queues[queueChoice - 1]->split(position, *secondPart);
+            queues.push_back(secondPart);
+            cout << "Second part stored as Queue " << queues.size() << ".\n";
             break;
         }
 
         case 16: {
             int first, second;
-            cout << "Concatenate:\n";
-            cout << "Enter first queue (1 or 2): ";
+            cout << "Select first queue  (1 to " << queues.size() << "): ";
             cin >> first;
-            cout << "Enter second queue (1 or 2): ";
+            cout << "Select second queue (1 to " << queues.size() << "): ";
             cin >> second;
-
-            if (first == 1 && second == 2)
-                queue1.concatenate(queue2);
-            else if (first == 2 && second == 1)
-                queue2.concatenate(queue1);
-            else
-                cout << "Invalid selection!\n";
-
+            if (first < 1 || first > (int)queues.size() ||
+                second < 1 || second > (int)queues.size()) {
+                cout << "Invalid queue selection!\n";
+                break;
+            }
+            if (first == second) {
+                cout << "Cannot concatenate a queue with itself!\n";
+                break;
+            }
+            LinkedList* result = copyLinkedList(queues[first - 1]);
+            LinkedList* copySecond = copyLinkedList(queues[second - 1]);
+            result->concatenate(*copySecond);
+            delete copySecond;
+            queues.push_back(result);
+            cout << "Concatenated result stored as Queue " << queues.size() << ".\n";
             break;
         }
 
@@ -160,10 +193,11 @@ int main() {
             break;
 
         case 20:
-            cout << "Queue1: ";
-            queue1.display();
-            cout << "Queue2: ";
-            queue2.display();
+            cout << "\n=== All Queues (" << queues.size() << " total) ===" << endl;
+            for (int i = 0; i < (int)queues.size(); i++) {
+                cout << "Queue " << (i + 1) << " -> ";
+                queues[i]->display();
+            }
             break;
 
         case 0:
@@ -175,6 +209,9 @@ int main() {
         }
 
     } while (choice != 0);
+
+    for (LinkedList* q : queues)
+        delete q;
 
     return 0;
 }
