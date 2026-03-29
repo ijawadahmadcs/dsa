@@ -28,23 +28,23 @@ int main() {
     int choice, value, position, queueChoice;
 
     do {
-        cout << "\n=== QUEUE MENU (Active Queues: " << queues.size() << ") ===" << endl;
-        cout << "1.  Enqueue (Insert at Rear)" << endl;
+        cout << "\n QUEUE Menu (Active Queues: " << queues.size() << ") " << endl;
+        cout << "1.  Insert at Rear" << endl;
         cout << "2.  Insert at Front" << endl;
         cout << "3.  Insert at Position" << endl;
-        cout << "4.  Dequeue (Delete from Front)" << endl;
+        cout << "4.  Delete from Front" << endl;
         cout << "5.  Delete from Rear" << endl;
         cout << "6.  Delete at Position" << endl;
         cout << "7.  Search" << endl;
-        cout << "8.  Reverse           (creates new queue)" << endl;
+        cout << "8.  Reverse" << endl;
         cout << "9.  Count Elements" << endl;
         cout << "10. Display Queue" << endl;
         cout << "11. Find Largest" << endl;
         cout << "12. Find Smallest" << endl;
         cout << "13. Get Sum" << endl;
         cout << "14. Get Average" << endl;
-        cout << "15. Split Queue       (second part becomes new queue)" << endl;
-        cout << "16. Concatenate       (result stored as new queue)" << endl;
+        cout << "15. Split Queue" << endl;
+        cout << "16. Concatenate" << endl;
         cout << "17. Find Third Largest" << endl;
         cout << "18. Check if Queue is Empty" << endl;
         cout << "19. View Front Element" << endl;
@@ -189,7 +189,7 @@ int main() {
             break;
 
         case 20:
-            cout << "\n=== All Queues (" << queues.size() << " total) ===" << endl;
+            cout << "\n All Queues (" << queues.size() << " total) " << endl;
             for (int i = 0; i < (int)queues.size(); i++) {
                 cout << "Queue " << (i + 1) << " -> ";
                 queues[i]->display();

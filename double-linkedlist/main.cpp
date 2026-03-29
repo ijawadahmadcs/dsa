@@ -28,7 +28,7 @@ int main() {
     int choice, value, position, listChoice;
 
     do {
-        cout << "\n=== DOUBLE LINKED LIST MENU (Active Lists: " << lists.size() << ") ===" << endl;
+        cout << "\n DOUBLE LINKED LIST MENU (Active Lists: " << lists.size() << ")" << endl;
         cout << "1.  Insert at Beginning\n";
         cout << "2.  Insert at End\n";
         cout << "3.  Insert at Position\n";
@@ -36,15 +36,15 @@ int main() {
         cout << "5.  Delete from End\n";
         cout << "6.  Delete at Position\n";
         cout << "7.  Search Element\n";
-        cout << "8.  Reverse List      (creates new list)\n";
+        cout << "8.  Reverse List\n";
         cout << "9.  Count Nodes\n";
         cout << "10. Display List\n";
         cout << "11. Find Largest\n";
         cout << "12. Find Smallest\n";
         cout << "13. Get Sum\n";
         cout << "14. Get Average\n";
-        cout << "15. Split List        (second part becomes new list)\n";
-        cout << "16. Concatenate Lists  (result stored as new list)\n";
+        cout << "15. Split List \n";
+        cout << "16. Concatenate Lists\n";
         cout << "17. Find Third Largest\n";
         cout << "18. Check if List is Empty\n";
         cout << "19. Copy to New List\n";
@@ -198,7 +198,7 @@ int main() {
         }
 
         case 20:
-            cout << "\n=== All Lists (" << lists.size() << " total) ===" << endl;
+            cout << "\nAll Lists (" << lists.size() << " total)" << endl;
             for (int i = 0; i < (int)lists.size(); i++) {
                 cout << "List " << (i + 1) << " -> ";
                 lists[i]->display();
