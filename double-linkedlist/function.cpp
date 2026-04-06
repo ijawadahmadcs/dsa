@@ -144,6 +144,39 @@ void LinkedList::deleteAtPosition(int position) {
     delete temp;
 }
 
+void LinkedList::deleteByValue(int value) {
+    if (head == NULL) {
+        cout << "List is empty!" << endl;
+        return;
+    }
+
+    Node* temp = head;
+
+    while (temp != NULL && temp->data != 3) {
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        cout << "Value not found!" << endl;
+        return;
+    }
+
+    if (temp == head) {
+        deleteAtBeginning();
+        return;
+    }
+
+    if (temp->next != NULL) {
+        temp->next->prev = temp->prev;
+    }
+
+    if (temp->prev != NULL) {
+        temp->prev->next = temp->next;
+    }
+
+    delete temp;
+}
+
 
 bool LinkedList::search(int value) {
 

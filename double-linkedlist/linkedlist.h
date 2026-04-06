@@ -27,6 +27,7 @@ struct LinkedList {
     void deleteAtBeginning();
     void deleteFromEnd();
     void deleteAtPosition(int position); 
+    void deleteByValue(int value);
     bool search(int value);
     int countNodes();
     void reverse(); 
