@@ -1,37 +1,34 @@
 #ifndef TREE_H
 #define TREE_H
-
 #include <iostream>
+
 using namespace std;
-
-// ─── Node for BST ────────────────────────────────────────────────────────────
-class TreeNode {
-public:
-    int      data;
-    TreeNode* left;
-    TreeNode* right;
-
-    TreeNode(int value) : data(value), left(nullptr), right(nullptr) {}
+struct node {
+    int info;
+    struct node *lchild;
+    struct node *rchild;
 };
-
-
 class Tree {
 public:
-    TreeNode* root;
-    Tree() : root(nullptr) {}
-    void insert(int value);
-    void deletion(int value);
-    void find(int value);
-    void inorder(TreeNode* node);
-    void preorder(TreeNode* node);
-    void postorder(TreeNode* node);
-private:
-    void findNode(int item, TreeNode*& location, TreeNode*& parent);
+    node *root;
+    Tree();
+    // Core BST operations
+    void find(int item, node **par, node **loc);
+    void insert(int item);
+    void deletion(int item);
 
-    void case_a(TreeNode* parent, TreeNode* location);   // leaf node
-    void case_b(TreeNode* parent, TreeNode* location);   // one child
-    void case_c(TreeNode* parent, TreeNode* location);   // two children
+    // Deletion helper cases
+    void case_a(node *par, node *loc);
+    void case_b(node *par, node *loc);
+    void case_c(node *par, node *loc);
+
+    // Traversals
+    void preorder(node *ptr);
+    void inorder(node *ptr);
+    void postorder(node *ptr);
+
+    // Recursive search
+    node* search(node *ptr, int info);
 };
 
-
-#endif // TREE_H
+#endif
