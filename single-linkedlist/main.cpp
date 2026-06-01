@@ -48,13 +48,17 @@ int main() {
         cout << "17. Find Third Largest\n";
         cout << "18. Check if List is Empty\n";
         cout << "19. Copy to New List\n";
-        cout << "20. Display All Lists\n";
+        cout << "20. Bubble Sort List\n";
+        cout << "21. Selection Sort List\n";
+        cout << "22. Merge Sort List\n";
+        cout << "23. Quick Sort List\n";
+        cout << "24. Display All Lists\n";
         cout << "0.  Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
 
         LinkedList* selectedList = nullptr;
-        if ((choice >= 1 && choice <= 14) || choice == 17 || choice == 18 || choice == 19) {
+        if ((choice >= 1 && choice <= 14) || choice == 17 || choice == 18 || (choice >= 20 && choice <= 23)) {
             cout << "Select List (1 to " << lists.size() << "): ";
             cin >> listChoice;
             if (listChoice < 1 || listChoice > (int)lists.size()) {
@@ -198,6 +202,26 @@ int main() {
         }
 
         case 20:
+            selectedList->bubbleSort();
+            cout << "List sorted using Bubble Sort.\n";
+            break;
+
+        case 21:
+            selectedList->selectionSort();
+            cout << "List sorted using Selection Sort.\n";
+            break;
+
+        case 22:
+            selectedList->mergeSort();
+            cout << "List sorted using Merge Sort.\n";
+            break;
+
+        case 23:
+            selectedList->quickSort();
+            cout << "List sorted using Quick Sort.\n";
+            break;
+
+        case 24:
             cout << "\n=== All Lists (" << lists.size() << " total) ===" << endl;
             for (int i = 0; i < (int)lists.size(); i++) {
                 cout << "List " << (i + 1) << " -> ";

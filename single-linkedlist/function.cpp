@@ -1,5 +1,127 @@
 #include "linkedlist.h"
 
+static void swapNodeData(Node* first, Node* second) {
+    int temp = first->data;
+    first->data = second->data;
+    second->data = temp;
+}
+
+static Node* getMiddleNode(Node* head) {
+    if (head == NULL)
+        return head;
+
+    Node* slow = head;
+    Node* fast = head->next;
+
+    while (fast != NULL) {
+        fast = fast->next;
+        if (fast != NULL) {
+            slow = slow->next;
+            fast = fast->next;
+        }
+    }
+
+    return slow;
+}
+
+static Node* mergeSortedLists(Node* left, Node* right) {
+    if (left == NULL)
+        return right;
+    if (right == NULL)
+        return left;
+
+    Node* result = NULL;
+
+    if (left->data <= right->data) {
+        result = left;
+        result->next = mergeSortedLists(left->next, right);
+    } else {
+        result = right;
+        result->next = mergeSortedLists(left, right->next);
+    }
+
+    return result;
+}
+
+static void mergeSortNodes(Node** headRef) {
+    Node* head = *headRef;
+    if (head == NULL || head->next == NULL)
+        return;
+
+    Node* middle = getMiddleNode(head);
+    Node* nextToMiddle = middle->next;
+
+    middle->next = NULL;
+
+    mergeSortNodes(&head);
+    mergeSortNodes(&nextToMiddle);
+
+    *headRef = mergeSortedLists(head, nextToMiddle);
+}
+
+static Node* partitionLast(Node* head, Node* end, Node** newHead, Node** newEnd) {
+    Node* pivot = end;
+    Node* prev = NULL;
+    Node* current = head;
+    Node* tail = pivot;
+
+    while (current != pivot) {
+        if (current->data < pivot->data) {
+            if (*newHead == NULL)
+                *newHead = current;
+            prev = current;
+            current = current->next;
+        } else {
+            if (prev != NULL)
+                prev->next = current->next;
+            Node* temp = current->next;
+            current->next = NULL;
+            tail->next = current;
+            tail = current;
+            current = temp;
+        }
+    }
+
+    if (*newHead == NULL)
+        *newHead = pivot;
+
+    *newEnd = tail;
+    return pivot;
+}
+
+static Node* quickSortRecur(Node* head, Node* end) {
+    if (head == NULL || head == end)
+        return head;
+
+    Node* newHead = NULL;
+    Node* newEnd = NULL;
+
+    Node* pivot = partitionLast(head, end, &newHead, &newEnd);
+
+    if (newHead != pivot) {
+        Node* temp = newHead;
+        while (temp->next != pivot)
+            temp = temp->next;
+        temp->next = NULL;
+
+        newHead = quickSortRecur(newHead, temp);
+
+        temp = newHead;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = pivot;
+    }
+
+    pivot->next = quickSortRecur(pivot->next, newEnd);
+    return newHead;
+}
+
+static Node* getTailNode(Node* current) {
+    while (current != NULL && current->next != NULL)
+        current = current->next;
+    return current;
+}
+
 LinkedList::LinkedList() {
     head = NULL;
 }
@@ -207,6 +329,55 @@ void LinkedList::split(int position, LinkedList& secondList) {
 
     secondList.head = temp->next;
     temp->next = NULL;
+}
+
+
+void LinkedList::bubbleSort() {
+    if (head == NULL || head->next == NULL)
+        return;
+
+    bool swapped;
+    Node* end = NULL;
+
+    do {
+        swapped = false;
+        Node* current = head;
+
+        while (current->next != end) {
+            if (current->data > current->next->data) {
+                swapNodeData(current, current->next);
+                swapped = true;
+            }
+            current = current->next;
+        }
+        end = current;
+    } while (swapped);
+}
+
+
+void LinkedList::selectionSort() {
+    if (head == NULL || head->next == NULL)
+        return;
+
+    for (Node* start = head; start != NULL; start = start->next) {
+        Node* minNode = start;
+        for (Node* current = start->next; current != NULL; current = current->next) {
+            if (current->data < minNode->data)
+                minNode = current;
+        }
+        if (minNode != start)
+            swapNodeData(start, minNode);
+    }
+}
+
+
+void LinkedList::mergeSort() {
+    mergeSortNodes(&head);
+}
+
+
+void LinkedList::quickSort() {
+    head = quickSortRecur(head, getTailNode(head));
 }
 
 
