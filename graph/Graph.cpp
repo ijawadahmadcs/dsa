@@ -34,10 +34,7 @@ Graph::~Graph() {
     while (!isStackEmpty()) pop();
 }
 
-// ═══════════════════════════════════════════════════════════════════
 //  findNode – locate a GraphNode by its integer name
-// ═══════════════════════════════════════════════════════════════════
-
 GraphNode *Graph::findNode(int name) {
     GraphNode *ptr = start;
     while (ptr != NULL) {
@@ -48,10 +45,7 @@ GraphNode *Graph::findNode(int name) {
     return NULL;
 }
 
-// ═══════════════════════════════════════════════════════════════════
 //  Linked-list Queue  (used by BFS and topological sort)
-// ═══════════════════════════════════════════════════════════════════
-
 void Graph::enqueue(int val) {
     QueueNode *tmp = new QueueNode;
     tmp->data = val;
@@ -385,10 +379,7 @@ void Graph::dfs(int startNode) {
     cout << "\n";
 }
 
-// ═══════════════════════════════════════════════════════════════════
 //  bfs  (mirror of PDF bfs function)
-// ═══════════════════════════════════════════════════════════════════
-
 void Graph::bfs(int startNode) {
     // reset visited
     GraphNode *ptr = start;
@@ -424,11 +415,8 @@ void Graph::bfs(int startNode) {
     cout << "\n";
 }
 
-// ═══════════════════════════════════════════════════════════════════
 //  findMinTemp – helper for Dijkstra
 //  Returns index of the PERM-eligible temporary node with min dist.
-// ═══════════════════════════════════════════════════════════════════
-
 int Graph::findMinTemp(NodeState state[], int /*nodeCount*/) {
     int minDist = INFINITY_VAL + 1;
     int minIdx  = 0;
@@ -445,10 +433,7 @@ int Graph::findMinTemp(NodeState state[], int /*nodeCount*/) {
     return minIdx;
 }
 
-// ═══════════════════════════════════════════════════════════════════
 //  dijkstra  (mirror of PDF findpath / Dijkstra logic)
-// ═══════════════════════════════════════════════════════════════════
-
 void Graph::dijkstra(int source, int dest) {
     NodeState state[MAX + 1];
 
@@ -536,10 +521,7 @@ void Graph::dijkstra(int source, int dest) {
     cout << path[1] << "\n";
 }
 
-// ═══════════════════════════════════════════════════════════════════
 //  isComplete – every node is adjacent to every other node
-// ═══════════════════════════════════════════════════════════════════
-
 bool Graph::isComplete() {
     // For a directed complete graph each node should have n-1 outgoing edges
     // to every other node (no self-loops expected).
@@ -558,11 +540,8 @@ bool Graph::isComplete() {
     return true;
 }
 
-// ═══════════════════════════════════════════════════════════════════
 //  isConnected – undirected-style: every node reachable from node 1
 //  (uses BFS internally without touching the public visited state)
-// ═══════════════════════════════════════════════════════════════════
-
 bool Graph::isConnected() {
     if (start == NULL) return true;
 
@@ -599,14 +578,6 @@ bool Graph::isConnected() {
     }
     return true;
 }
-
-// ═══════════════════════════════════════════════════════════════════
-//  pathOfLength – builds the adjacency matrix from the linked list,
-//  raises it to the requested power (as in the PDF section
-//  "Computing Path Matrix from Powers of Adjacency Matrix"),
-//  and prints the number of paths of exactly that length from
-//  src to dst.
-// ═══════════════════════════════════════════════════════════════════
 
 // helper: multiply two n×n matrices (1-indexed up to nodeCount)
 static void multiplyMatrices(int a[][MAX], int b[][MAX], int c[][MAX], int nodeCount) {

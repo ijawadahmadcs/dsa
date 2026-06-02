@@ -3,10 +3,10 @@
 int main() {
     Graph graph;
     int choice;
-
+    int start;
     while (true) {
         cout << "\n";
-        cout << "1.  insert node\n";
+        cout << "1.  Insert node\n";
         cout << "2.  insert edge\n";
         cout << "3.  delete node\n";
         cout << "4.  delete edge\n";
@@ -17,6 +17,8 @@ int main() {
         cout << "9.  connected\n";
         cout << "10. path of given length from one node to another\n";
         cout << "11. display\n";
+        cout << "12. Prims\n";
+        cout << "13. Kruskal\n";
         cout << "0.  Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
@@ -128,6 +130,14 @@ int main() {
                 graph.display();
                 break;
             }
+            case 12:
+            cout<<"Enter starting node\n";
+            cin>>start;   
+            graph.prims(start);
+               
+               break;
+            case 13:
+               graph.kruskal();
 
             default:
                 cout << "Invalid choice. Please try again.\n";

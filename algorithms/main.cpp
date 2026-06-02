@@ -1,149 +1,73 @@
-#include<iostream>
+#include <iostream>
+#include "Graph.h"
+
 using namespace std;
-void bubbleSort(int arr[], int n)
+
+int main()
 {
-    for(int i = 0; i < n - 1; i++)
-    {
-        bool swapped = false;
+	Graph g;
+	int choice;
 
-        for(int j = 0; j < n - i - 1; j++)
-        {
-            if(arr[j] > arr[j + 1])
-            {
-                int temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
+	while(true)
+	{
+		cout << "\n--- Graph Menu ---\n";
+		cout << "1. Add Vertex\n";
+		cout << "2. Add Edge\n";
+		cout << "3. Display Graph\n";
+		cout << "4. Prim's MST\n";
+		cout << "5. Kruskal MST\n";
+		cout << "6. Exit\n";
+		cout << "Enter choice: ";
+		if(!(cin >> choice))
+		{
+			cin.clear();
+			cout << "Invalid input. Try again.\n";
+			continue;
+		}
 
-                swapped = true;
-            }
-        }
+		if(choice == 1)
+		{
+			int v;
+			cout << "Enter vertex id (int): ";
+			cin >> v;
+			g.addVertex(v);
+			cout << "Vertex added.\n";
+		}
+		else if(choice == 2)
+		{
+			int u, v, w;
+			cout << "Enter source vertex: "; cin >> u;
+			cout << "Enter destination vertex: "; cin >> v;
+			cout << "Enter weight: "; cin >> w;
+			g.addEdge(u, v, w);
+			cout << "Edge added.\n";
+		}
+		else if(choice == 3)
+		{
+			cout << "\nGraph:\n";
+			g.display();
+		}
+		else if(choice == 4)
+		{
+			int sv;
+			cout << "Enter start vertex for Prim's algorithm: ";
+			cin >> sv;
+			g.prims(sv);
+		}
+		else if(choice == 5)
+		{
+			g.kruskal();
+		}
+		else if(choice == 6)
+		{
+			cout << "Exiting.\n";
+			break;
+		}
+		else
+		{
+			cout << "Invalid choice.\n";
+		}
+	}
 
-        if(!swapped)
-            break;
-    }
-}
-
-void selectionSort(int arr[], int n)
-{
-    for(int i = 0; i < n - 1; i++)
-    {
-        int minIndex = i;
-
-        for(int j = i + 1; j < n; j++)
-        {
-            if(arr[j] < arr[minIndex])
-                minIndex = j;
-        }
-
-        if(minIndex != i)
-        {
-            int temp = arr[i];
-            arr[i] = arr[minIndex];
-            arr[minIndex] = temp;
-        }
-    }
-}
-void merge(int arr[], int low, int mid, int high)
-{
-    int n1 = mid - low + 1;
-    int n2 = high - mid;
-
-    int *left = new int[n1];
-    int *right = new int[n2];
-
-    for(int i = 0; i < n1; i++)
-        left[i] = arr[low + i];
-
-    for(int j = 0; j < n2; j++)
-        right[j] = arr[mid + 1 + j];
-
-    int i = 0, j = 0, k = low;
-
-    while(i < n1 && j < n2)
-    {
-        if(left[i] <= right[j])
-            arr[k++] = left[i++];
-        else
-            arr[k++] = right[j++];
-    }
-
-    while(i < n1)
-        arr[k++] = left[i++];
-
-    while(j < n2)
-        arr[k++] = right[j++];
-
-    delete[] left;
-    delete[] right;
-}
-
-
-void mergeSort(int arr[], int low, int high)
-{
-    if(low < high)
-    {
-        int mid = (low + high) / 2;
-
-        mergeSort(arr, low, mid);
-        mergeSort(arr, mid + 1, high);
-
-        merge(arr, low, mid, high);
-    }
-}
-
-
-int partition(int arr[], int low, int high)
-{
-    int pivot = arr[high];
-
-    int i = low - 1;
-
-    for(int j = low; j < high; j++)
-    {
-        if(arr[j] <= pivot)
-        {
-            i++;
-
-            int temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
-        }
-    }
-
-    int temp = arr[i + 1];
-    arr[i + 1] = arr[high];
-    arr[high] = temp;
-
-    return i + 1;
-}
-
-void quickSort(int arr[], int low, int high)
-{
-    if(low < high)
-    {
-        int pivotIndex = partition(arr, low, high);
-
-        quickSort(arr, low, pivotIndex - 1);
-        quickSort(arr, pivotIndex + 1, high);
-    }
-}
-
-
-void display(int arr[], int n)
-{
-    for(int i = 0; i < n; i++)
-        cout << arr[i] << " ";
-
-    cout << endl;
-}
-int main(){
-    int arr[] = {64, 25, 12, 22, 11};
-int n = 5;
-
-quickSort(arr, 0, n - 1);
-bubbleSort(arr, n);
- selectionSort(arr, n);
- mergeSort(arr, 0, n - 1);
-
-display(arr, n);
+	return 0;
 }
