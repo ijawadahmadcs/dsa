@@ -32,6 +32,10 @@ struct LinkedList {
     void reverse(); 
     void concatenate(LinkedList& otherList);
     void split(int position, LinkedList& secondList);
+    void bubbleSort();
+    void selectionSort();
+    void mergeSort();
+    void quickSort();
     int findLargest();
     int findSmallest();
     int getSum();
